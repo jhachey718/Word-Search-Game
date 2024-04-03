@@ -24,13 +24,13 @@ class WordSearch:
               return False
       return True
   def __init__(self, board_size):
-    self.window = window
     self.board_size = board_size
     self.board = [['0' for _ in range(board_size)] for _ in range(board_size)]
     self.word_list = []
     self.index_list = []
     self.total_chars = 0
     self.WORDS = []
+    self.words_found = 0
     self.MAX_CHARS = board_size * board_size - board_size * 2
     self.word_length_error = "Word must be at least 3 characters long"
     self.max_char_error = "Max amount of characters for board size reached!"
@@ -178,7 +178,9 @@ class WordSearch:
 
   def check_guess(self, selected_word):
     for index, word in enumerate(self.index_list):
-      if word.equals(selected_word):
+      if word.equals(selected_word) and not word.found:
+        word.found = True
+        self.words_found += 1
         return index
     return -1
 

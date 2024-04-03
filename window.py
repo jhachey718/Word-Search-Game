@@ -95,8 +95,7 @@ class WordSearchGUI:
 
   def check_word(self):
     index = self.word_search.check_guess(self.selected_word)
-    if index != -1 and not self.word_search.index_list[index].found:
-      self.word_search.index_list[index].found = True
+    if index != -1:
       for rect in self.selected_rectangle_list:
         self.canvas.itemconfig(rect.rectangle, fill='green')
         rect.solved = True
@@ -106,6 +105,8 @@ class WordSearchGUI:
                              fill="#67e356")
       self.selected_rectangle_list.clear()
       self.selected_word = self.word_search.Word()
+      if self.word_search.words_found == len(self.word_search.word_list):
+        self.winning_message()
 
   def select(self, event):
     self.row = (event.y - 25) // self.offset
@@ -190,6 +191,10 @@ class WordSearchGUI:
                                           250 // temp_font_difference)))
       i += 1
 
+  def winning_message(self):
+    print("you win")
+    return
+      
   def reset(self):
     for rect in self.selected_rectangle_list:
       if rect.solved:
