@@ -11,7 +11,7 @@ class Settings:
     self.word_search_created = False
     self.master.geometry("500x500")
     self.master.resizable(False, False)
-    self.master.configure(bg="#5B8E7D")
+    self.master.configure(bg="#161616")
     self.amount_to_generate = 0
     self.board_size_input = self.create_input_field(5, self.validate_int)
     self.board_size_input.place(
@@ -54,20 +54,20 @@ class Settings:
   def create_input_field(self, width, validatecommand):
     validation = self.master.register(validatecommand)
     return tk.Entry(self.master,
-                    background="#0B132B",
+                    background="#1B1B1B",
                     foreground="#FDFFFC",
                     width=width,
                     justify="center",
                     font=("Calistoga", 15),
                     validate="key",
-                    validatecommand=(validation, "%P"))
+                    validatecommand=(validation, "%P"), )
 
   def create_button(self, text, command):
     return tk.Button(self.master,
                      text=text,
-                     background="#0B132B",
+                     background="#1B1B1B",
                      foreground="#FDFFFC",
-                     activebackground="#1F2644",
+                     activebackground="#282626",
                      activeforeground="#FDFFF7",
                      command=command,
                      font=("Calistoga", 15))
@@ -107,7 +107,7 @@ class Settings:
       root.title("Word Search")
       root.geometry("1280x750")
       root.resizable(False, False)
-      root.configure(bg="#5B8E7D")
+      root.configure(bg="#161616")
       self.word_search_gui = window.WordSearchGUI(root, self.word_search)
     elif not self.word_search_created:
       self.show_error("Set a board size before creating a window!")

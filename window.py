@@ -46,7 +46,7 @@ class WordSearchGUI:
         master,
         width=self.width,
         height=self.height,
-        background="#5B8E7D",
+        background="#161616",
         highlightthickness=0)
     # 0B132B - oxford blue
     # FDFFFC - baby powder
@@ -79,7 +79,7 @@ class WordSearchGUI:
                                          self.x1,
                                          self.y1,
                                          outline="#FDFFFC",
-                                         fill="#0B132B"))
+                                         fill="#1B1B1B"))
         self.canvas.create_text(self.x0 + self.offset // 2,
                                 self.y0 + self.offset // 2,
                                 text=self.word_search.board[i][j],
@@ -121,7 +121,7 @@ class WordSearchGUI:
                                  y0,
                                  x1,
                                  y1,
-                                 fill="#0B132B",
+                                 fill="#1B1B1B",
                                  outline="#FDFFFC")
     i = 1
     j = 0
