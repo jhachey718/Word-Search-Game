@@ -32,10 +32,18 @@ class WordSearchGUI:
     self.reset_button = tk.Button(self.master,
                                   text="Reset",
                                   font=("Calistoga", 15),
+                                  background="#1B1B1B",
+                                   foreground="#FDFFFC",
+                                   activebackground="#282626",
+                                   activeforeground="#FDFFF7",
                                   command=self.reset)
     self.settings_button = tk.Button(self.master,
                                      text="New Board",
                                      font=("Calistoga", 15),
+                                     background="#1B1B1B",
+                                    foreground="#FDFFFC",
+                                      activebackground="#282626",
+                                      activeforeground="#FDFFF7",
                                      command=self.settings)
     self.reset_button.place(relx=.18, y=self.height + 2)
     self.settings_button.place(relx=.28, y=self.height + 2)
