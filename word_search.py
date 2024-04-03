@@ -7,6 +7,7 @@ import window
 class WordSearch:
   class Word:
     def __init__ (self):
+      self.found = False
       self.indexes = []
 
     def equals(self, other):
