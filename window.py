@@ -11,11 +11,11 @@ class WordSearchGUI:
       self.selected = False
       self.rectangle = rectangle
 
-  def __init__(self, master, word_search):
+  def __init__(self, master, wordsearch):
     self.master = master
-    self.word_search = word_search
+    self.word_search = wordsearch
     self.selected_indexes = []
-    self.selected_word = self.word_search.Word_Indexes()
+    self.selected_word = ""
     self.rectangle_list = [[
         self.Letter(0) for _ in range(self.word_search.board_size)
     ] for _ in range(self.word_search.board_size)]
@@ -96,7 +96,7 @@ class WordSearchGUI:
                              text=current_text + u'\u2713',
                              fill="#67e356")
       self.selected_rectangle_list.clear()
-      self.selected_word = self.word_search.Word_Indexes()
+      self.selected_word = ""
 
   def select(self, event):
     self.row = (event.y - 25) // self.offset
@@ -109,7 +109,7 @@ class WordSearchGUI:
       letter.selected = True
       self.canvas.itemconfig(letter.rectangle, fill='red')
       self.selected_rectangle_list.append(letter)
-      self.selected_word.indexes.append([self.row, self.col])
+      self.selected_word += str(self.row) + str(self.col)
       self.check_word()
 
   def generate_word_bank(self):
@@ -185,7 +185,7 @@ class WordSearchGUI:
       self.canvas.itemconfig(rect.rectangle, fill='#0B132B')
       rect.selected = False
     self.selected_rectangle_list.clear()
-    self.selected_word = self.word_search.Word_Indexes()
+    self.selected_word = ""
 
   def settings(self):
     self.master.destroy()

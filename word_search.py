@@ -6,24 +6,24 @@ import window
 
 class WordSearch:
 
-  class Word_Indexes:
-    def __init__ (self):
-      self.indexes = []
+  # class Word_Indexes:
+  #   def __init__ (self):
+  #     self.indexes = []
 
-    def equals(self, other):
-      list1 = self.indexes
-      list2 = other.indexes
-      if len(list1) != len(list2):
-          return False
+  #   def equals(self, other):
+  #     list1 = self.indexes
+  #     list2 = other.indexes
+  #     if len(list1) != len(list2):
+  #         return False
 
-      # Check if each element is equal
-      for i in range(len(list1)):
-          if len(list1[i]) != len(list2[i]):
-              return False
-          for j in range(len(list1[i])):
-              if list1[i][j] != list2[i][j]:
-                  return False
-      return True
+  #     # Check if each element is equal
+  #     for i in range(len(list1)):
+  #         if len(list1[i]) != len(list2[i]):
+  #             return False
+  #         for j in range(len(list1[i])):
+  #             if list1[i][j] != list2[i][j]:
+  #                 return False
+  #     return True
 
   def __init__(self, board_size):
     self.window = window
@@ -55,7 +55,7 @@ class WordSearch:
       is_placed = False
 
       while not is_placed:
-        word_indexes = self.Word_Indexes()
+        word_indexes = ""
         temp_board = deepcopy(self.board)
         col = random.randint(0, self.board_size - 1)
         row = random.randint(0, self.board_size - 1)
@@ -76,7 +76,7 @@ class WordSearch:
             new_row = row - i
             if temp_board[new_row][new_col] == '0':
               temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
+              word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, new_col])
                 self.index_list.append(word_indexes)
@@ -90,7 +90,7 @@ class WordSearch:
             new_row = row - i
             if temp_board[new_row][col] == '0':
               temp_board[new_row][col] = word[i]
-              word_indexes.indexes.append([new_row, col])
+              word_indexes += str(new_row) + str(col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, col])
                 self.index_list.append(word_indexes)
@@ -106,7 +106,7 @@ class WordSearch:
             new_row = row - i
             if temp_board[new_row][new_col] == '0':
               temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
+              word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, new_col])
                 self.index_list.append(word_indexes)
@@ -120,7 +120,7 @@ class WordSearch:
             new_col = col - i
             if temp_board[row][new_col] == '0':
               temp_board[row][new_col] = word[i]
-              word_indexes.indexes.append([row, new_col])
+              word_indexes += str(row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([row, new_col])
                 self.index_list.append(word_indexes)
@@ -134,7 +134,7 @@ class WordSearch:
             new_col = col + i
             if temp_board[row][new_col] == '0':
               temp_board[row][new_col] = word[i]
-              word_indexes.indexes.append([row, new_col])
+              word_indexes += str(row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([row, new_col])
                 self.index_list.append(word_indexes)
@@ -150,7 +150,7 @@ class WordSearch:
             new_row = row + i
             if temp_board[new_row][new_col] == '0':
               temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
+              word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, new_col])
                 self.index_list.append(word_indexes)
@@ -164,7 +164,7 @@ class WordSearch:
             new_row = row + i
             if temp_board[new_row][col] == '0':
               temp_board[new_row][col] = word[i]
-              word_indexes.indexes.append([new_row, col])
+              word_indexes += str(new_row) + str(col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, col])
                 self.index_list.append(word_indexes)
@@ -180,7 +180,7 @@ class WordSearch:
             new_col = col + i
             if temp_board[new_row][new_col] == '0':
               temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
+              word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
                 # self.index_list.append([new_row, new_col])
                 self.index_list.append(word_indexes)
@@ -195,7 +195,7 @@ class WordSearch:
 
   def check_guess(self, selected_word):
     for index, word in enumerate(self.index_list):
-      if word.equals(selected_word):
+      if word == selected_word:
         return index
     return -1
 
