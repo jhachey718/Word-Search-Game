@@ -19,9 +19,8 @@ class WordSearch:
       for i in range(len(list1)):
           if len(list1[i]) != len(list2[i]):
               return False
-          for j in range(len(list1[i])):
-              if list1[i][j] != list2[i][j]:
-                  return False
+          if  not list1[i] in list2:
+              return False
       return True
   def __init__(self, board_size):
     self.window = window
@@ -75,7 +74,6 @@ class WordSearch:
               temp_board[new_row][new_col] = word[i]
               word_indexes.indexes.append([new_row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -86,9 +84,8 @@ class WordSearch:
             new_row = row - i
             if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
               temp_board[new_row][col] = word[i]
-              word_indexes += str(new_row) + str(col)
+              word_indexes.indexes.append([new_row, col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -101,9 +98,8 @@ class WordSearch:
             new_row = row - i
             if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
-              word_indexes = str(new_row) + str(new_col)
+              word_indexes.indexes.append([new_row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -114,9 +110,8 @@ class WordSearch:
             new_col = col - i
             if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
               temp_board[row][new_col] = word[i]
-              word_indexes += str(row) + str(new_col)
+              word_indexes.indexes.append([row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -127,9 +122,8 @@ class WordSearch:
             new_col = col + i
             if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
               temp_board[row][new_col] = word[i]
-              word_indexes += str(row) + str(new_col)
+              word_indexes.indexes.append([row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -142,9 +136,8 @@ class WordSearch:
             new_row = row + i
             if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
-              word_indexes += str(new_row) + str(new_col)
+              word_indexes.indexes.append([new_row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -155,9 +148,8 @@ class WordSearch:
             new_row = row + i
             if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
               temp_board[new_row][col] = word[i]
-              word_indexes += str(new_row) + str(col)
+              word_indexes.indexes.append([new_row, col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -170,9 +162,8 @@ class WordSearch:
             new_col = col + i
             if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
-              word_indexes += str(new_row) + str(new_col)
+              word_indexes.indexes.append([new_row, new_col])
               if i == len(word) - 1:
-                self.index_list.append(word_indexes)
                 is_placed = True
                 # print(f"Placed {word}")
             else:
@@ -180,12 +171,13 @@ class WordSearch:
 
         if is_placed:
           # print("board updated")
+          self.index_list.append(word_indexes)
           self.board = deepcopy(temp_board)
     # print(self.index_list)
 
   def check_guess(self, selected_word):
     for index, word in enumerate(self.index_list):
-      if word == selected_word:
+      if word.equals(selected_word):
         return index
     return -1
 
