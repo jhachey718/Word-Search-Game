@@ -54,7 +54,7 @@ class WordSearch:
           for i in range(len(word)):
             new_col = col - i
             new_row = row - i
-            if temp_board[new_row][new_col] == '0':
+            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
               word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
@@ -67,7 +67,7 @@ class WordSearch:
         if direction == 1 and row - len(word) >= 0:
           for i in range(len(word)):
             new_row = row - i
-            if temp_board[new_row][col] == '0':
+            if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
               temp_board[new_row][col] = word[i]
               word_indexes += str(new_row) + str(col)
               if i == len(word) - 1:
@@ -82,7 +82,7 @@ class WordSearch:
           for i in range(len(word)):
             new_col = col + i
             new_row = row - i
-            if temp_board[new_row][new_col] == '0':
+            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
               word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
@@ -95,7 +95,7 @@ class WordSearch:
         if direction == 3 and col - len(word) >= 0:
           for i in range(len(word)):
             new_col = col - i
-            if temp_board[row][new_col] == '0':
+            if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
               temp_board[row][new_col] = word[i]
               word_indexes += str(row) + str(new_col)
               if i == len(word) - 1:
@@ -108,7 +108,7 @@ class WordSearch:
         if direction == 4 and col + len(word) <= self.board_size:
           for i in range(len(word)):
             new_col = col + i
-            if temp_board[row][new_col] == '0':
+            if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
               temp_board[row][new_col] = word[i]
               word_indexes += str(row) + str(new_col)
               if i == len(word) - 1:
@@ -123,7 +123,7 @@ class WordSearch:
           for i in range(len(word)):
             new_col = col - i
             new_row = row + i
-            if temp_board[new_row][new_col] == '0':
+            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
               word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:
@@ -136,7 +136,7 @@ class WordSearch:
         if direction == 6 and row + len(word) <= self.board_size:
           for i in range(len(word)):
             new_row = row + i
-            if temp_board[new_row][col] == '0':
+            if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
               temp_board[new_row][col] = word[i]
               word_indexes += str(new_row) + str(col)
               if i == len(word) - 1:
@@ -151,7 +151,7 @@ class WordSearch:
           for i in range(len(word)):
             new_row = row + i
             new_col = col + i
-            if temp_board[new_row][new_col] == '0':
+            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
               temp_board[new_row][new_col] = word[i]
               word_indexes += str(new_row) + str(new_col)
               if i == len(word) - 1:

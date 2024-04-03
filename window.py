@@ -10,6 +10,7 @@ class WordSearchGUI:
     def __init__(self, rectangle):
       self.selected = False
       self.rectangle = rectangle
+      self.solved = False
 
   def __init__(self, master, wordsearch):
     self.master = master
@@ -91,6 +92,7 @@ class WordSearchGUI:
     if index != -1:
       for rect in self.selected_rectangle_list:
         self.canvas.itemconfig(rect.rectangle, fill='green')
+        rect.solved = True
       current_text = self.canvas.itemcget(self.word_bank[index], "text")
       self.canvas.itemconfig(self.word_bank[index],
                              text=current_text + u'\u2713',
@@ -105,7 +107,7 @@ class WordSearchGUI:
     self.col >= self.word_search.board_size:
       return
     letter = self.rectangle_list[self.row][self.col]
-    if not letter.selected:
+    if not letter.selected or letter.solved:
       letter.selected = True
       self.canvas.itemconfig(letter.rectangle, fill='red')
       self.selected_rectangle_list.append(letter)
@@ -184,8 +186,11 @@ class WordSearchGUI:
 
   def reset(self):
     for rect in self.selected_rectangle_list:
-      self.canvas.itemconfig(rect.rectangle, fill='#0B132B')
-      rect.selected = False
+      if rect.solved:
+        self.canvas.itemconfig(rect.rectangle, fill='green')
+      else:
+        self.canvas.itemconfig(rect.rectangle, fill='#0B132B')
+        rect.selected = False
     self.selected_rectangle_list.clear()
     self.selected_word = ""
 
