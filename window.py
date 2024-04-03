@@ -138,6 +138,8 @@ class WordSearchGUI:
     words_per_column = font_difference + 1
     for word in self.word_search.word_list:
       temp_font_difference = font_difference
+      if len(word) > 8 and len(word) <= 11:
+        temp_font_difference += 2
       if len(word) > 11 and len(word) <= 17 and multi_columns:
         temp_font_difference += 4
       if len(word) > 17:

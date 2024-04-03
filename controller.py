@@ -19,7 +19,7 @@ class Settings:
         rely=.20,
         anchor="center",
     )
-    self.confirm_board_size = self.create_button("Confirm Board Sizes",
+    self.confirm_board_size = self.create_button("Confirm Board Size",
                                                  self.get_input_board_size)
     self.confirm_board_size.place(relx=.5, rely=.30, anchor="center")
     self.word_input = self.create_input_field(15, self.validate_word)
