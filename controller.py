@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import BooleanVar, messagebox
 import word_search
 import window
 
@@ -13,6 +13,7 @@ class Settings:
     self.master.resizable(False, False)
     self.master.configure(bg="#161616")
     self.amount_to_generate = 0
+    self.drag_mode = tk.BooleanVar()
     self.board_size_input = self.create_input_field(5, self.validate_int)
     self.board_size_input.place(
         relx=.5,
@@ -31,9 +32,15 @@ class Settings:
     self.random_words.place(relx=.65, rely=.7, anchor="center")
     self.amount_random_words = self.create_input_field(5, self.validate_int)
     self.amount_random_words.place(relx=.35, rely=.7, anchor="center")
+    self.drag_mode_button = self.create_radiobutton("Click n Drag Mode",
+                                                    self.drag_mode, True)
+    self.select_mode_button = self.create_radiobutton("Individual Select Mode",
+                                                      self.drag_mode, False)
+    self.drag_mode_button.place(relx=.3, rely=.82, anchor="center")
+    self.select_mode_button.place(relx=.3, rely=.88, anchor="center")
 
     self.create = self.create_button("Create", self.create_window)
-    self.create.place(relx=.5, rely=.85, anchor="center")
+    self.create.place(relx=.7, rely=.85, anchor="center")
 
   def get_input_board_size(self):
     if self.board_size_input.get().isdigit():
@@ -53,14 +60,16 @@ class Settings:
 
   def create_input_field(self, width, validatecommand):
     validation = self.master.register(validatecommand)
-    return tk.Entry(self.master,
-                    background="#1B1B1B",
-                    foreground="#FDFFFC",
-                    width=width,
-                    justify="center",
-                    font=("Calistoga", 15),
-                    validate="key",
-                    validatecommand=(validation, "%P"), )
+    return tk.Entry(
+        self.master,
+        background="#1B1B1B",
+        foreground="#FDFFFC",
+        width=width,
+        justify="center",
+        font=("Calistoga", 15),
+        validate="key",
+        validatecommand=(validation, "%P"),
+    )
 
   def create_button(self, text, command):
     return tk.Button(self.master,
@@ -71,6 +80,19 @@ class Settings:
                      activeforeground="#FDFFF7",
                      command=command,
                      font=("Calistoga", 15))
+
+  def create_radiobutton(self, text, var, value):
+    return tk.Radiobutton(self.master,
+                          text=text,
+                          variable=var,
+                          value=value,
+                          background="#1B1B1B",
+                          foreground="#FDFFFC",
+                          activebackground="#282626",
+                          activeforeground="#FDFFF7",
+                          selectcolor="#1B1B1B",
+                          font=("Calistoga", 12),
+                          highlightthickness=0)
 
   def show_error(self, msg):
     if msg != "":
@@ -88,12 +110,13 @@ class Settings:
       if excessive_words > 0:
         if self.amount_to_generate - excessive_words != 0:
           self.show_error("Can only generate " +
-                        str(self.amount_to_generate - excessive_words) +
-                        " more words. Try again.")
+                          str(self.amount_to_generate - excessive_words) +
+                          " more words. Try again.")
         else:
           self.show_error("Can't generate anymore words.")
       else:
-        self.show_error(self.word_search.generate_words(self.amount_to_generate))
+        self.show_error(
+            self.word_search.generate_words(self.amount_to_generate))
 
   def create_window(self):
     if self.word_search_created and len(self.word_search.word_list) > 0:
@@ -108,7 +131,8 @@ class Settings:
       root.geometry("1280x750")
       root.resizable(False, False)
       root.configure(bg="#161616")
-      self.word_search_gui = window.WordSearchGUI(root, self.word_search)
+      self.word_search_gui = window.WordSearchGUI(root, self.word_search,
+                                                  self.drag_mode.get())
     elif not self.word_search_created:
       self.show_error("Set a board size before creating a window!")
     else:

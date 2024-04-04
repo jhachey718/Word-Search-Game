@@ -48,7 +48,8 @@ class WordSearchGUI:
                                      activebackground="#282626",
                                      activeforeground="#FDFFF7",
                                      command=self.settings)
-    self.reset_button.place(relx=.18, y=self.height + 2)
+    if not self.drag_mode:
+      self.reset_button.place(relx=.18, y=self.height + 2)
     self.settings_button.place(relx=.28, y=self.height + 2)
     if self.offset % 2 != 0:
       self.offset += 1
@@ -146,9 +147,10 @@ class WordSearchGUI:
         self.col = current_col
 
   def end_selection(self, event):
-    letter = self.rectangle_list[self.row][self.col]
-    self.canvas.itemconfig(letter.rectangle, fill='red')
-    self.selected_rectangle_list.append(letter)
+    if self.in_bounds(self.row, self.col):
+      letter = self.rectangle_list[self.row][self.col]
+      self.canvas.itemconfig(letter.rectangle, fill='red')
+      self.selected_rectangle_list.append(letter)
     self.check_word()
 
   def select(self, event):
