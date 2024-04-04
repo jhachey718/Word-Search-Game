@@ -102,12 +102,13 @@ class WordSearchGUI:
                                 fill="#FDFFFC",
                                 font=("Calistoga", self.font_size))
 
-  def check_word(self):
+  def check_word(self, length):
     index = self.word_search.check_guess(self.selected_word)
     if index != -1:
-      for rect in self.selected_rectangle_list:
-        self.canvas.itemconfig(rect.rectangle, fill='green')
-        rect.solved = True
+      for i in range(0, length):
+        self.canvas.itemconfig(self.selected_rectangle_list[i].rectangle,
+                               fill='green')
+        self.selected_rectangle_list[i].solved = True
       current_text = self.canvas.itemcget(self.word_bank[index], "text")
       self.canvas.itemconfig(self.word_bank[index],
                              text=current_text + u'\u2713',
@@ -119,13 +120,12 @@ class WordSearchGUI:
     elif self.drag_mode:
       self.reset()
 
-
   def end_selection(self, event):
     if self.in_bounds(self.row, self.col):
       letter = self.rectangle_list[self.row][self.col]
       self.canvas.itemconfig(letter.rectangle, fill='red')
       self.selected_rectangle_list.append(letter)
-    self.check_word()
+    self.check_word(len(self.selected_word.indexes))
 
   def select(self, event):
     self.row = (event.y - 25) // self.offset
@@ -137,10 +137,10 @@ class WordSearchGUI:
         x = (event.x - 25) / self.offset - self.col
         if not self.drag_mode or (x >= .3 and x <= .8 and y >= .3 and y <= .8):
           self.canvas.itemconfig(letter.rectangle, fill='red')
-          self.selected_rectangle_list.append(letter)
           self.selected_word.indexes.append([self.row, self.col])
+          self.selected_rectangle_list.append(letter)
         if not self.drag_mode:
-          self.check_word()
+          self.check_word(len(self.selected_word.indexes))
 
   def in_bounds(self, row, col):
     return row >= 0 and row < self.word_search.board_size and col >= 0 and \
