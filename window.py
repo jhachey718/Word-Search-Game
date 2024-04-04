@@ -50,7 +50,9 @@ class WordSearchGUI:
                                      command=self.settings)
     if not self.drag_mode:
       self.reset_button.place(relx=.18, y=self.height + 2)
-    self.settings_button.place(relx=.28, y=self.height + 2)
+      self.settings_button.place(relx=.28, y=self.height + 2)
+    else:
+      self.settings_button.place(relx=.23, y=self.height + 2)
     if self.offset % 2 != 0:
       self.offset += 1
 

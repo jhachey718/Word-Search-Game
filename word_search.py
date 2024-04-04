@@ -191,7 +191,7 @@ class WordSearch:
         message = self.add_word(random_word)
         if message == "":
           break
-        elif message == self.max_char_error:
+        else:
           return message
     return ""
 

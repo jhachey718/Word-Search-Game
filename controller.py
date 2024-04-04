@@ -106,7 +106,7 @@ class Settings:
     else:
       self.amount_to_generate = int(self.amount_random_words.get())
       excessive_words = self.amount_to_generate + len(
-          self.word_search.word_list) - (self.word_search.board_size * 2)
+          self.word_search.word_list) - (self.word_search.word_limit)
       if excessive_words > 0:
         if self.amount_to_generate - excessive_words != 0:
           self.show_error("Can only generate " +
@@ -123,6 +123,7 @@ class Settings:
       self.word_search.word_list = sorted(self.word_search.word_list,
                                           key=len,
                                           reverse=True)
+      print(self.word_search.word_list)
       self.word_search.place_words()
       self.word_search.fill_board()
       self.master.destroy()
