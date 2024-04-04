@@ -13,6 +13,7 @@ class WordSearchGUI:
 
   def __init__(self, master, wordsearch):
     self.master = master
+    self.master.wait_visibility()
     self.word_search = wordsearch
     self.selected_word = self.word_search.Word()
     self.rectangle_list = [[
@@ -34,29 +35,28 @@ class WordSearchGUI:
                                   text="Reset",
                                   font=("Calistoga", 15),
                                   background="#1B1B1B",
-                                   foreground="#FDFFFC",
-                                   activebackground="#282626",
-                                   activeforeground="#FDFFF7",
+                                  foreground="#FDFFFC",
+                                  activebackground="#282626",
+                                  activeforeground="#FDFFF7",
                                   command=self.reset)
     self.settings_button = tk.Button(self.master,
                                      text="New Board",
                                      font=("Calistoga", 15),
                                      background="#1B1B1B",
-                                    foreground="#FDFFFC",
-                                      activebackground="#282626",
-                                      activeforeground="#FDFFF7",
+                                     foreground="#FDFFFC",
+                                     activebackground="#282626",
+                                     activeforeground="#FDFFF7",
                                      command=self.settings)
     self.reset_button.place(relx=.18, y=self.height + 2)
     self.settings_button.place(relx=.28, y=self.height + 2)
     if self.offset % 2 != 0:
       self.offset += 1
 
-    self.canvas = tk.Canvas(
-        master,
-        width=self.width,
-        height=self.height,
-        background="#161616",
-        highlightthickness=0)
+    self.canvas = tk.Canvas(master,
+                            width=self.width,
+                            height=self.height,
+                            background="#161616",
+                            highlightthickness=0)
     # 0B132B - oxford blue
     # FDFFFC - baby powder
     # F4A259 - sandy brown
@@ -117,7 +117,7 @@ class WordSearchGUI:
     self.col >= self.word_search.board_size:
       return
     letter = self.rectangle_list[self.row][self.col]
-    if not [self.row, self.col] in self.selected_word.indexes:
+    if [self.row, self.col] not in self.selected_word.indexes:
       self.canvas.itemconfig(letter.rectangle, fill='red')
       self.selected_rectangle_list.append(letter)
       self.selected_word.indexes.append([self.row, self.col])
@@ -194,9 +194,24 @@ class WordSearchGUI:
       i += 1
 
   def winning_message(self):
-    print("you win")
-    return
-      
+    self.win_window = tk.Toplevel(self.master)
+    self.win_window.title("Word Search")
+    self.win_window.geometry("400x200")
+    self.win_window.wait_visibility()
+    x = self.master.winfo_rootx(
+    ) + self.master.winfo_width() // 2 - self.win_window.winfo_width() // 2
+    y = self.master.winfo_rooty(
+    ) + self.master.winfo_height() // 2 - self.win_window.winfo_height() // 2
+    self.win_window.geometry(f"+{x}+{y}")
+    self.win_window.resizable(False, False)
+    self.win_window.configure(bg="#161616")
+    label = tk.Label(self.win_window,
+                     text="You Win!",
+                     font=("Calistoga", 50),
+                     fg="#67e356",
+                     bg="#161616")
+    label.place(anchor="center", relx=.5, rely=.5)
+
   def reset(self):
     for rect in self.selected_rectangle_list:
       if rect.solved:

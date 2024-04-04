@@ -37,26 +37,26 @@ class WordSearchGUI:
                                 font=("Arial", 20))
 
   def start_selection(self, event):
-    self.selected_word = self.grid[event.y // 50][event.x // 50]
     self.start_row = event.y // 50
     self.start_col = event.x // 50
+    y = event.y / 50 - self.start_row
+    x = event.x / 50 - self.start_col
+    if x >= .3 and x <= .8 and y >= .3 and y <= .8:
+      self.selected_word = self.grid[event.y // 50][event.x // 50]
+      print("" + str(event.y / 50) + " " + str(event.x / 50))
 
   def select_letters(self, event):
     current_row = event.y // 50
     current_col = event.x // 50
-    if (current_row != self.start_row and current_col != self.start_col):
-      self.diagonal = True
-      self.selected_word += self.grid[current_row][current_col]
-      self.start_row = current_row
-      self.start_col = current_col
-    if not self.diagonal and (current_row != self.start_row \
-      or current_col != self.start_col):
+    y = event.y / 50 - current_row
+    x = event.x / 50 - current_col
+    if (current_row != self.start_row or current_col) != self.start_col and \
+    x >= .3 and x <= .8 and y >= .3 and y <= .8:
       self.selected_word += self.grid[current_row][current_col]
       self.start_row = current_row
       self.start_col = current_col
 
   def end_selection(self, event):
-    self.diagonal = False
     print("Selected Word:", self.selected_word)
 
 
