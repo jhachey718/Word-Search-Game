@@ -15,14 +15,12 @@ class WordSearch:
       list2 = other.indexes
       if len(list1) != len(list2):
           return False
-
-      # Check if each element is equal
+      # Check if each element exists in both lists
       for i in range(len(list1)):
-          if len(list1[i]) != len(list2[i]):
-              return False
           if  not list1[i] in list2:
               return False
       return True
+      
   def __init__(self, board_size):
     self.board_size = board_size
     self.board = [['0' for _ in range(board_size)] for _ in range(board_size)]
@@ -59,14 +57,12 @@ class WordSearch:
         # 0 1 2
         # 3 _ 4
         # 5 6 7
+        direction = random.randint(0, 7)
         if len(word) in range(self.board_size - 2, self.board_size):
-          direction = random.randint(0, 7)
           if direction == 0:
             direction += 1
           if direction == 2 or direction == 5 or direction == 7:
             direction -= 1
-        else:
-          direction = random.randint(0, 7)
         if direction == 0 and col - len(word) >= 0 and row - len(word) >= 0:
           for i in range(len(word)):
             new_col = col - i
@@ -178,7 +174,7 @@ class WordSearch:
 
   def check_guess(self, selected_word):
     for index, word in enumerate(self.index_list):
-      if word.equals(selected_word) and not word.found:
+      if not word.found and word.equals(selected_word):
         word.found = True
         self.words_found += 1
         return index

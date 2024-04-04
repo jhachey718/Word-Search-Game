@@ -21,7 +21,9 @@ class WordSearchGUI:
     self.selected_rectangle_list = []
     self.previous_row = 0
     self.previous_col = 0
-    self.offset = 665 // self.word_search.board_size
+    self.offset = 650 // self.word_search.board_size
+    if self.word_search.board_size == 24:
+      self.offset -= 1
     self.width = 1280
     self.height = 695
     self.word_bank = []
@@ -141,7 +143,7 @@ class WordSearchGUI:
     if len(self.word_search.word_list) > 10:
       font_difference = len(self.word_search.word_list)
     if len(self.word_search.word_list) > 15:
-      font_difference = 17 if len(self.word_search.word_list) > 30 else 12
+      font_difference = 17 if len(self.word_search.word_list) > 30 else 14
       multi_columns = True
     line_spacing = 500 // font_difference
     words_per_column = font_difference + 1

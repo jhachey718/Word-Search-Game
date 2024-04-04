@@ -2,7 +2,7 @@ import tkinter as tk
 import word_search
 import window
 
-word_search = word_search.WordSearch(10)
+word_search = word_search.WordSearch(24)
 word_search.add_word("hello")
 word_search.add_word("hello")
 # word_search.add_word("hello")
