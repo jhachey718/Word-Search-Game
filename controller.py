@@ -20,14 +20,14 @@ class Settings:
         rely=.20,
         anchor="center",
     )
-    self.confirm_board_size = self.create_button("Confirm Board Size",
+    self.confirm_board_size = self.create_button(self.master, "Confirm Board Size",
                                                  self.get_input_board_size)
     self.confirm_board_size.place(relx=.5, rely=.30, anchor="center")
     self.word_input = self.create_input_field(15, self.validate_word)
     self.word_input.place(relx=.5, rely=.45, anchor="center")
-    self.confirm_word = self.create_button("Add Word", self.get_input_word)
+    self.confirm_word = self.create_button(self.master, "Add Word", self.get_input_word)
     self.confirm_word.place(relx=.5, rely=.55, anchor="center")
-    self.random_words = self.create_button("Generate Words",
+    self.random_words = self.create_button(self.master, "Generate Words",
                                            self.generate_random_words)
     self.random_words.place(relx=.65, rely=.7, anchor="center")
     self.amount_random_words = self.create_input_field(5, self.validate_int)
@@ -39,7 +39,7 @@ class Settings:
     self.drag_mode_button.place(relx=.3, rely=.82, anchor="center")
     self.select_mode_button.place(relx=.3, rely=.88, anchor="center")
 
-    self.create = self.create_button("Create", self.create_window)
+    self.create = self.create_button(self.master, "Create", self.create_word_search)
     self.create.place(relx=.7, rely=.85, anchor="center")
 
   def get_input_board_size(self):
@@ -71,8 +71,8 @@ class Settings:
         validatecommand=(validation, "%P"),
     )
 
-  def create_button(self, text, command):
-    return tk.Button(self.master,
+  def create_button(self, root, text, command):
+    return tk.Button(root,
                      text=text,
                      background="#1B1B1B",
                      foreground="#FDFFFC",
@@ -118,27 +118,30 @@ class Settings:
         self.show_error(
             self.word_search.generate_words(self.amount_to_generate))
 
-  def create_window(self):
+  def create_word_search(self):
     if self.word_search_created and len(self.word_search.word_list) > 0:
       self.word_search.word_list = sorted(self.word_search.word_list,
                                           key=len,
                                           reverse=True)
-      print(self.word_search.word_list)
       self.word_search.place_words()
       self.word_search.fill_board()
-      self.master.destroy()
-      root = tk.Tk()
-      root.title("Word Search")
-      root.geometry("1280x750")
-      root.resizable(False, False)
-      root.configure(bg="#161616")
-      self.word_search_gui = window.WordSearchGUI(root, self.word_search,
-                                                  self.drag_mode.get())
+      self.create_window()
+
     elif not self.word_search_created:
       self.show_error("Set a board size before creating a window!")
     else:
       self.show_error("Add words to your word search!")
 
+  
+  def create_window(self):
+      self.master.destroy()
+      root = tk.Tk()
+      root.title("Word Search")
+      root.geometry("1645x1170")
+      root.resizable(False, False)
+      root.configure(bg="#161616")
+      self.word_search_gui = window.WordSearchGUI(root, self.word_search,
+                                                   self)
   def validate_word(self, input):
     return input.isalpha() or input == ""
 

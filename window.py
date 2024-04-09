@@ -11,48 +11,38 @@ class WordSearchGUI:
       self.rectangle = rectangle
       self.solved = False
 
-  def __init__(self, master, wordsearch, clickndrag):
+  def __init__(self, master, wordsearch, settings):
+    self.settings = settings
     self.master = master
-    self.master.wait_visibility()
+    self.master.update()
     self.word_search = wordsearch
     self.selected_word = self.word_search.Word()
-    self.rectangle_list = [[
+    self.letter_list = [[
         self.Letter(0) for _ in range(self.word_search.board_size)
     ] for _ in range(self.word_search.board_size)]
     self.selected_rectangle_list = []
-    self.drag_mode = clickndrag
-    self.previous_row = 0
-    self.previous_col = 0
-    self.offset = 650 // self.word_search.board_size
+    self.drag_mode = settings.drag_mode.get()
+    self.offset = 1070 // self.word_search.board_size
+    
     if self.word_search.board_size == 24:
       self.offset -= 1
-    self.width = 1280
-    self.height = 695
+    self.width = self.master.winfo_width()
+    self.height = self.master.winfo_height() - 55
+    print(self.width, self.height)
     self.word_bank = []
     self.font_size = 375 // self.word_search.board_size
+    
     if self.font_size > 20:
       self.font_size = 20
-    self.reset_button = tk.Button(self.master,
-                                  text="Reset",
-                                  font=("Calistoga", 15),
-                                  background="#1B1B1B",
-                                  foreground="#FDFFFC",
-                                  activebackground="#282626",
-                                  activeforeground="#FDFFF7",
-                                  command=self.reset)
-    self.settings_button = tk.Button(self.master,
-                                     text="New Board",
-                                     font=("Calistoga", 15),
-                                     background="#1B1B1B",
-                                     foreground="#FDFFFC",
-                                     activebackground="#282626",
-                                     activeforeground="#FDFFF7",
-                                     command=self.settings)
+    self.reset_button = settings.create_button(self.master, "Reset", self.reset)
+    self.settings_button = settings.create_button(self.master, "New Board", self.settings)
+    
     if not self.drag_mode:
-      self.reset_button.place(relx=.18, y=self.height + 2)
-      self.settings_button.place(relx=.28, y=self.height + 2)
+      self.reset_button.place(relx=.25, y=self.height + 2)
+      self.settings_button.place(relx=.35, y=self.height + 2)
     else:
-      self.settings_button.place(relx=.23, y=self.height + 2)
+      self.settings_button.place(relx=.30, y=self.height + 2)
+      
     if self.offset % 2 != 0:
       self.offset += 1
 
@@ -61,17 +51,11 @@ class WordSearchGUI:
                             height=self.height,
                             background="#161616",
                             highlightthickness=0)
-    # 0B132B - oxford blue
-    # FDFFFC - baby powder
-    # F4A259 - sandy brown
-    # 5B8E7D - viridian
-    # BC4B51 - shimmer
-    # 048A81 - dark cyan
-
     self.canvas.pack()
 
     self.draw_grid()
     self.master.bind("<Button-1>", self.select)
+    
     if not self.drag_mode:
       self.master.bind("<Key>", self.process_key)
     else:
@@ -79,17 +63,14 @@ class WordSearchGUI:
       self.master.bind("<ButtonRelease-1>", self.end_selection)
     self.generate_word_bank()
 
-  # def resize(self, event):
-  #   self.canvas.config(width=event.width, height=event.height)
-
   def draw_grid(self):
     for i in range(self.word_search.board_size):
       for j in range(self.word_search.board_size):
-        self.x0 = j * self.offset + 25
-        self.x1 = (j + 1) * self.offset + 25
-        self.y0 = i * self.offset + 25
-        self.y1 = (i + 1) * self.offset + 25
-        self.rectangle_list[i][j] = self.Letter(
+        self.x0 = j * self.offset + 50
+        self.x1 = (j + 1) * self.offset + 50
+        self.y0 = i * self.offset + 50
+        self.y1 = (i + 1) * self.offset + 50
+        self.letter_list[i][j] = self.Letter(
             self.canvas.create_rectangle(self.x0,
                                          self.y0,
                                          self.x1,
@@ -102,53 +83,13 @@ class WordSearchGUI:
                                 fill="#FDFFFC",
                                 font=("Calistoga", self.font_size))
 
-  def check_word(self, length):
-    index = self.word_search.check_guess(self.selected_word)
-    if index != -1:
-      for i in range(0, length):
-        self.canvas.itemconfig(self.selected_rectangle_list[i].rectangle,
-                               fill='green')
-        self.selected_rectangle_list[i].solved = True
-      current_text = self.canvas.itemcget(self.word_bank[index], "text")
-      self.canvas.itemconfig(self.word_bank[index],
-                             text=current_text + u'\u2713',
-                             fill="#67e356")
-      self.selected_rectangle_list.clear()
-      self.selected_word = self.word_search.Word()
-      if self.word_search.words_found == len(self.word_search.word_list):
-        self.winning_message()
-    elif self.drag_mode:
-      self.reset()
-
-  def end_selection(self, event):
-    if self.in_bounds(self.row, self.col):
-      letter = self.rectangle_list[self.row][self.col]
-      self.canvas.itemconfig(letter.rectangle, fill='red')
-      self.selected_rectangle_list.append(letter)
-    self.check_word(len(self.selected_word.indexes))
-
-  def select(self, event):
-    self.row = (event.y - 25) // self.offset
-    self.col = (event.x - 25) // self.offset
-    if self.in_bounds(self.row, self.col):
-      letter = self.rectangle_list[self.row][self.col]
-      if [self.row, self.col] not in self.selected_word.indexes:
-        y = (event.y - 25) / self.offset - self.row
-        x = (event.x - 25) / self.offset - self.col
-        if not self.drag_mode or (x >= .3 and x <= .8 and y >= .3 and y <= .8):
-          self.canvas.itemconfig(letter.rectangle, fill='red')
-          self.selected_word.indexes.append([self.row, self.col])
-          self.selected_rectangle_list.append(letter)
-        if not self.drag_mode:
-          self.check_word(len(self.selected_word.indexes))
-
   def in_bounds(self, row, col):
     return row >= 0 and row < self.word_search.board_size and col >= 0 and \
     col < self.word_search.board_size
 
   def generate_word_bank(self):
-    x0 = self.width / 2 + 125
-    y0 = self.height - 50
+    x0 = self.width / 2 + 335
+    y0 = self.height - 20
     x1 = x0 + 425
     y1 = 50
     self.canvas.create_rectangle(x0,
@@ -162,36 +103,31 @@ class WordSearchGUI:
     column = 0
     multi_columns = False
     words_per_column = 0
-    font_difference = 10
-    if len(self.word_search.word_list) > 10:
-      font_difference = len(self.word_search.word_list)
-    if len(self.word_search.word_list) > 15:
-      font_difference = 17 if len(self.word_search.word_list) > 30 else 14
+    font_difference = 12
+
+    if len(self.word_search.word_list) > 25:
       multi_columns = True
     line_spacing = 500 // font_difference
-    words_per_column = font_difference + 1
+    words_per_column = font_difference + 12
+    
     for word in self.word_search.word_list:
       temp_font_difference = font_difference
-      if len(word) > 8 and len(word) <= 11:
-        temp_font_difference += 2
+
       if len(word) > 11 and len(word) <= 17 and multi_columns:
-        temp_font_difference += 4
+        temp_font_difference += 2
+
       if len(word) > 17:
         if not multi_columns:
           temp_font_difference += 2
         else:
-          temp_font_difference += 10
+          temp_font_difference += 7
 
       if multi_columns:
         if j == 0:
-          column = 10 / 45
+          column = 12 / 45
 
         elif j == words_per_column:
-          column = 1 / 2
-          i = 1
-
-        elif j == 2 * words_per_column:
-          column = 45 / 60
+          column = 33/45
           i = 1
 
         self.word_bank.append(
@@ -199,7 +135,7 @@ class WordSearchGUI:
                                     y1 + line_spacing * i,
                                     text=word,
                                     fill="#FDFFFC",
-                                    anchor="n",
+                                    justify="center",
                                     font=("Calistoga",
                                           250 // temp_font_difference)))
         j += 1
@@ -210,11 +146,56 @@ class WordSearchGUI:
                                     y1 + line_spacing * i,
                                     text=word,
                                     fill="#FDFFFC",
-                                    anchor="n",
                                     justify="center",
                                     font=("Calistoga",
                                           250 // temp_font_difference)))
       i += 1
+
+  def select(self, event):
+    self.row = (event.y - 50) // self.offset
+    self.col = (event.x - 50) // self.offset
+    
+    if self.in_bounds(self.row, self.col):
+      letter = self.letter_list[self.row][self.col]
+      
+      if [self.row, self.col] not in self.selected_word.indexes:
+        y = (event.y - 50) / self.offset - self.row
+        x = (event.x - 50) / self.offset - self.col
+        
+        if not self.drag_mode or (x >= .3 and x <= .8 and y >= .3 and y <= .8):
+          self.canvas.itemconfig(letter.rectangle, fill='red')
+          self.selected_word.indexes.append([self.row, self.col])
+          self.selected_rectangle_list.append(letter)
+          
+        if not self.drag_mode:
+          self.check_word(len(self.selected_word.indexes))
+
+  def end_selection(self, event):
+    if self.in_bounds(self.row, self.col):
+      letter = self.letter_list[self.row][self.col]
+      self.canvas.itemconfig(letter.rectangle, fill='red')
+      self.selected_rectangle_list.append(letter)
+    self.check_word(len(self.selected_word.indexes))
+
+  def check_word(self, length):
+    index = self.word_search.check_guess(self.selected_word)
+    
+    if index != -1:
+      for i in range(0, length):
+        self.canvas.itemconfig(self.selected_rectangle_list[i].rectangle,
+                               fill='green')
+        self.selected_rectangle_list[i].solved = True
+      current_text = self.canvas.itemcget(self.word_bank[index], "text")
+      self.canvas.itemconfig(self.word_bank[index],
+                             text=current_text + u'\u2713',
+                             fill="#67e356")
+      self.selected_rectangle_list.clear()
+      self.selected_word = self.word_search.Word()
+      
+      if self.word_search.words_found == len(self.word_search.word_list):
+        self.winning_message()
+    elif self.drag_mode:
+      self.reset()
 
   def winning_message(self):
     self.win_window = tk.Toplevel(self.master)
@@ -235,12 +216,18 @@ class WordSearchGUI:
                      bg="#161616")
     label.place(anchor="center", relx=.5, rely=.5)
 
+  def process_key(self, event):
+    if event.char.lower() == 'r':
+      self.reset()
+
   def reset(self):
     for rect in self.selected_rectangle_list:
+      
       if rect.solved:
         self.canvas.itemconfig(rect.rectangle, fill='green')
       else:
         self.canvas.itemconfig(rect.rectangle, fill='#1B1B1B')
+        
     self.selected_rectangle_list.clear()
     self.selected_word = self.word_search.Word()
 
@@ -249,7 +236,3 @@ class WordSearchGUI:
     root = tk.Tk()
     root.title("Settings")
     controller.Settings(root)
-
-  def process_key(self, event):
-    if event.char.lower() == 'r':
-      self.reset()

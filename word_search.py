@@ -5,8 +5,10 @@ import window
 
 
 class WordSearch:
+
   class Word:
-    def __init__ (self):
+
+    def __init__(self):
       self.found = False
       self.indexes = []
 
@@ -14,13 +16,10 @@ class WordSearch:
       list1 = self.indexes
       list2 = other.indexes
       if len(list1) != len(list2):
-          return False
+        return False
       # Check if each element exists in both lists
-      for i in range(len(list1)):
-          if  not list1[i] in list2:
-              return False
-      return True
-      
+      return all(item in list2 for item in list1)
+
   def __init__(self, board_size):
     self.board_size = board_size
     self.board = [['0' for _ in range(board_size)] for _ in range(board_size)]
@@ -44,141 +43,6 @@ class WordSearch:
   def print_word_search(self):
     for row in self.board:
       print(' '.join(row))
-
-  def place_words(self):
-    for word in self.word_list:
-      is_placed = False
-
-      while not is_placed:
-        word_indexes = self.Word()
-        temp_board = deepcopy(self.board)
-        col = random.randint(0, self.board_size - 1)
-        row = random.randint(0, self.board_size - 1)
-        # 0 1 2
-        # 3 _ 4
-        # 5 6 7
-        direction = random.randint(0, 7)
-        if len(word) in range(self.board_size - 2, self.board_size):
-          if direction == 0:
-            direction += 1
-          if direction == 2 or direction == 5 or direction == 7:
-            direction -= 1
-        if direction == 0 and col - len(word) >= 0 and row - len(word) >= 0:
-          for i in range(len(word)):
-            new_col = col - i
-            new_row = row - i
-            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
-              temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 1 and row - len(word) >= 0:
-          for i in range(len(word)):
-            new_row = row - i
-            if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
-              temp_board[new_row][col] = word[i]
-              word_indexes.indexes.append([new_row, col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 2 and col + len(word) <= self.board_size and row - len(
-            word) >= 0:
-          for i in range(len(word)):
-            new_col = col + i
-            new_row = row - i
-            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
-              temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 3 and col - len(word) >= 0:
-          for i in range(len(word)):
-            new_col = col - i
-            if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
-              temp_board[row][new_col] = word[i]
-              word_indexes.indexes.append([row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 4 and col + len(word) <= self.board_size:
-          for i in range(len(word)):
-            new_col = col + i
-            if temp_board[row][new_col] == '0' or temp_board[row][new_col] == word[i]:
-              temp_board[row][new_col] = word[i]
-              word_indexes.indexes.append([row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 5 and col - len(word) >= 0 and row + len(
-            word) <= self.board_size:
-          for i in range(len(word)):
-            new_col = col - i
-            new_row = row + i
-            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
-              temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 6 and row + len(word) <= self.board_size:
-          for i in range(len(word)):
-            new_row = row + i
-            if temp_board[new_row][col] == '0' or temp_board[new_row][col] == word[i]:
-              temp_board[new_row][col] = word[i]
-              word_indexes.indexes.append([new_row, col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if direction == 7 and col + len(word) <= self.board_size and row + len(
-            word) <= self.board_size:
-          for i in range(len(word)):
-            new_row = row + i
-            new_col = col + i
-            if temp_board[new_row][new_col] == '0' or temp_board[new_row][new_col] == word[i]:
-              temp_board[new_row][new_col] = word[i]
-              word_indexes.indexes.append([new_row, new_col])
-              if i == len(word) - 1:
-                is_placed = True
-                # print(f"Placed {word}")
-            else:
-              break
-
-        if is_placed:
-          # print("board updated")
-          self.index_list.append(word_indexes)
-          self.board = deepcopy(temp_board)
-    # print(self.index_list)
-
-  def check_guess(self, selected_word):
-    for index, word in enumerate(self.index_list):
-      if not word.found and word.equals(selected_word):
-        word.found = True
-        self.words_found += 1
-        return index
-    return -1
 
   def generate_words(self, amount_to_generate):
     if len(self.WORDS) == 0:
@@ -209,3 +73,113 @@ class WordSearch:
       self.total_chars += len(word)
       self.word_list.append(word.lower().strip())
       return ""
+
+  def __generate_direction(self, word):
+    # 0 1 2
+    # 3 _ 4
+    # 5 6 7
+    direction = random.randint(0, 7)
+    if len(word) in range(self.board_size - 2, self.board_size):
+      if direction == 0:
+        direction += 1
+      if direction == 2 or direction == 5 or direction == 7:
+        direction -= 1
+    return direction
+
+  def __test_place(self, word, temp_board, new_row, new_col, i):
+    if temp_board[new_row][new_col] == '0' or temp_board[new_row][
+      new_col] == word[i]:
+      temp_board[new_row][new_col] = word[i]
+      self.word_indexes.indexes.append([new_row, new_col])
+      return True
+    else:
+      return False
+    
+  def place_words(self):
+    for word in self.word_list:
+      is_placed = False
+
+      while not is_placed:
+        self.word_indexes = self.Word()
+        temp_board = deepcopy(self.board)
+        col = random.randint(0, self.board_size - 1)
+        row = random.randint(0, self.board_size - 1)
+        direction = self.__generate_direction(word)
+        
+        if direction == 0 and col - len(word) >= 0 and row - len(word) >= 0:
+          for i in range(len(word)):
+            new_col = col - i
+            new_row = row - i
+                # print(f"Placed {word}")
+            is_placed = self.__test_place(word, temp_board, new_row, new_col, i)
+            if not is_placed:
+              break
+
+        if direction == 1 and row - len(word) >= 0:
+          for i in range(len(word)):
+            new_row = row - i
+            is_placed = self.__test_place(word, temp_board, new_row, col, i)
+            if not is_placed:
+              break
+
+        if direction == 2 and col + len(word) <= self.board_size and row - len(
+            word) >= 0:
+          for i in range(len(word)):
+            new_col = col + i
+            new_row = row - i
+            is_placed = self.__test_place(word, temp_board, new_row, new_col, i)
+            if not is_placed:
+              break
+
+        if direction == 3 and col - len(word) >= 0:
+          for i in range(len(word)):
+            new_col = col - i
+            is_placed = self.__test_place(word, temp_board, row, new_col, i)
+            if not is_placed:
+              break
+
+        if direction == 4 and col + len(word) <= self.board_size:
+          for i in range(len(word)):
+            new_col = col + i
+            is_placed = self.__test_place(word, temp_board, row, new_col, i)
+            if not is_placed:
+              break
+
+        if direction == 5 and col - len(word) >= 0 and row + len(
+            word) <= self.board_size:
+          for i in range(len(word)):
+            new_col = col - i
+            new_row = row + i
+            is_placed = self.__test_place(word, temp_board, new_row, new_col, i)
+            if not is_placed:
+              break
+
+        if direction == 6 and row + len(word) <= self.board_size:
+          for i in range(len(word)):
+            new_row = row + i
+            is_placed = self.__test_place(word, temp_board, new_row, col, i)
+            if not is_placed:
+              break
+
+        if direction == 7 and col + len(word) <= self.board_size and row + len(
+            word) <= self.board_size:
+          for i in range(len(word)):
+            new_row = row + i
+            new_col = col + i
+            is_placed = self.__test_place(word, temp_board, new_row, new_col, i)
+            if not is_placed:
+              break
+
+        if is_placed:
+          # print("board updated")
+          self.index_list.append(self.word_indexes)
+          self.board = deepcopy(temp_board)
+    # print(self.index_list)
+
+  def check_guess(self, selected_word):
+    for index, word in enumerate(self.index_list):
+      if not word.found and word.equals(selected_word):
+        word.found = True
+        self.words_found += 1
+        return index
+    return -1
