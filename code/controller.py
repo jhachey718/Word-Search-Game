@@ -24,18 +24,18 @@ class Settings:
     )
     self.confirm_board_size = self.create_button(self.master,
                                                  "Confirm Board Size",
-                                                 self.__get_input_board_size)
+                                                 self.__get_input_board_size, 15)
     self.confirm_board_size.place(relx=.5, rely=.30, anchor="center")
 
     self.word_input = self.create_input_field(15, self.validate_word)
     self.word_input.place(relx=.5, rely=.45, anchor="center")
 
     self.confirm_word = self.create_button(self.master, "Add Word",
-                                           self.__get_input_word)
+                                           self.__get_input_word, 15)
     self.confirm_word.place(relx=.5, rely=.55, anchor="center")
 
     self.random_words = self.create_button(self.master, "Generate Words",
-                                           self.generate_random_words)
+                                           self.generate_random_words, 15)
     self.random_words.place(relx=.65, rely=.7, anchor="center")
 
     self.amount_random_words = self.create_input_field(5, self.validate_int)
@@ -50,11 +50,11 @@ class Settings:
     self.select_mode_button.place(relx=.3, rely=.88, anchor="center")
 
     self.create = self.create_button(self.master, "Create",
-                                     self.create_word_search)
+                                     self.create_word_search, 15)
     self.create.place(relx=.7, rely=.85, anchor="center")
 
   # General templates for creating differenct types of widgets
-  def create_button(self, root, text, command):
+  def create_button(self, root, text, command, font_size):
     return tk.Button(root,
                      text=text,
                      background="#1B1B1B",
@@ -62,7 +62,7 @@ class Settings:
                      activebackground="#282626",
                      activeforeground="#FDFFF7",
                      command=command,
-                     font=("Calistoga", 15))
+                     font=("Calistoga", font_size))
 
   def create_radiobutton(self, text, var, value):
     return tk.Radiobutton(self.master,

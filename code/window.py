@@ -23,22 +23,27 @@ class WordSearchGUI:
     ] for _ in range(self.word_search.board_size)]
     self.selected_rectangle_list = []
     self.drag_mode = settings.drag_mode.get()
-    self.offset = 1070 // self.word_search.board_size
-    
-    if self.word_search.board_size == 24:
-      self.offset -= 1
+    self.offset = 1070 // self.word_search.board_size - 2
+    if self.word_search.board_size < 16:
+      self.offset -= 2
+    if self.word_search.board_size < 13:
+     self.offset -= 1
+
     self.width = self.master.winfo_width()
-    self.height = self.master.winfo_height() - 55
+    self.height = self.master.winfo_height() - 75
     print(self.width, self.height)
     self.word_bank = []
     self.font_size = 375 // self.word_search.board_size
-    
+
     if self.font_size > 20:
       self.font_size = 20
 
     # Creating reset button and button to create a new board
-    self.__reset_button = settings.create_button(self.master, "Reset", self.__reset)
-    self.__settings_button = settings.create_button(self.master, "New Board", self.__settings)
+    self.__reset_button = settings.create_button(self.master, "Reset",
+                                                 self.__reset, self.font_size)
+    self.__settings_button = settings.create_button(self.master, "New Board",
+                                                    self.__settings,
+                                                    self.font_size)
 
     # Places buttons
     if not self.drag_mode:
@@ -46,7 +51,7 @@ class WordSearchGUI:
       self.__settings_button.place(relx=.35, y=self.height + 2)
     else:
       self.__settings_button.place(relx=.30, y=self.height + 2)
-      
+
     if self.offset % 2 != 0:
       self.offset += 1
 
@@ -113,7 +118,7 @@ class WordSearchGUI:
     # Setting up counters
     i = 1
     j = 0
-    
+
     column = 0
     multi_columns = False
     words_per_column = 0
@@ -124,7 +129,7 @@ class WordSearchGUI:
       multi_columns = True
     line_spacing = 500 // font_difference
     words_per_column = font_difference + 12
-    
+
     for word in self.word_search.word_list:
       temp_font_difference = font_difference
 
@@ -144,7 +149,7 @@ class WordSearchGUI:
           column = 12 / 45
 
         elif j == words_per_column:
-          column = 33/45
+          column = 33 / 45
           i = 1
 
         # Creates text box for each wor
@@ -157,7 +162,7 @@ class WordSearchGUI:
                                     font=("Calistoga",
                                           250 // temp_font_difference)))
         j += 1
-      
+
       else:
         # Creates text box for each word
         self.word_bank.append(
@@ -190,7 +195,7 @@ class WordSearchGUI:
           self.canvas.itemconfig(letter.rectangle, fill='red')
           self.selected_word.indexes.append([self.row, self.col])
           self.selected_rectangle_list.append(letter)
-          
+
         if not self.drag_mode:
           self.__check_word(len(self.selected_word.indexes))
 
@@ -205,7 +210,7 @@ class WordSearchGUI:
   def __check_word(self, length):
     # Determines if the indices of the selected letters match with the word list
     index = self.word_search.check_guess(self.selected_word)
-    
+
     if index != -1:
       for i in range(0, length):
         self.canvas.itemconfig(self.selected_rectangle_list[i].rectangle,
@@ -217,7 +222,7 @@ class WordSearchGUI:
                              fill="#67e356")
       self.selected_rectangle_list.clear()
       self.selected_word = self.word_search.Word()
-      
+
       if self.word_search.words_found == len(self.word_search.word_list):
         self.__winning_message()
     elif self.drag_mode:
@@ -250,12 +255,12 @@ class WordSearchGUI:
   # Returns any currently selected letter on the board to their original state
   def __reset(self):
     for rect in self.selected_rectangle_list:
-      
+
       if rect.solved:
         self.canvas.itemconfig(rect.rectangle, fill='green')
       else:
         self.canvas.itemconfig(rect.rectangle, fill='#1B1B1B')
-        
+
     self.selected_rectangle_list.clear()
     self.selected_word = self.word_search.Word()
 

@@ -2,13 +2,12 @@ import sys
 import tkinter as tk
 from pathlib import Path
 p = Path('..')
-p = p.cwd()
 sys.path.insert(0, str(p) + '/code')
 import word_search
 import window
 import controller
 
-word_search = word_search.WordSearch(25)
+word_search = word_search.WordSearch(22)
 word_search.add_word("veryveryverylongword")
 word_search.generate_words(30)
 word_search.word_list = sorted(word_search.word_list, key=len, reverse=True)

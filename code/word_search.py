@@ -31,8 +31,10 @@ class WordSearch:
     self.WORDS = []
     self.words_found = 0
     self.MAX_CHARS = board_size * board_size - board_size * 2
+    self.word_limit_error = "Word limit reached"
     self.word_length_error = "Word must be at least 3 characters long"
     self.max_char_error = "Max amount of characters for board size reached!"
+    self.end_of_board_error = "Word must be at least one character shorter than board size"
     self.word_limit = self.board_size * 2 if self.board_size > 15 else int(
         self.board_size * 1.5)
 
@@ -53,7 +55,6 @@ class WordSearch:
     if len(self.WORDS) == 0:
       # Creating a path to the word list
       p = Path('..')
-      p = p.cwd()
       word_file = str(p) + '/word_lists/words.txt'
       with open(word_file) as file:
         self.WORDS = file.read().splitlines()
@@ -63,7 +64,7 @@ class WordSearch:
         message = self.add_word(random_word)
         if message == "":
           break
-        else:
+        elif message == self.max_char_error or message == self.word_limit_error:
           return message
     return ""
 
@@ -71,11 +72,11 @@ class WordSearch:
   def add_word(self, word):
     word = str(word)
     if len(self.word_list) > self.word_limit:
-      return "Word limit reached"
+      return self.word_limit_error
     if len(word) <= 2:
       return self.word_length_error
     if len(word) >= self.board_size - 1:
-      return "Word must be at least one character shorter than board size"
+      return self.end_of_board_error
     if len(word) + self.total_chars > self.MAX_CHARS:
       return self.max_char_error
     else:
