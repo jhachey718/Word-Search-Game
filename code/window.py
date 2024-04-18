@@ -42,7 +42,7 @@ class WordSearchGUI:
     self.__reset_button = settings.create_button(self.master, "Reset",
                                                  self.__reset, self.font_size)
     self.__settings_button = settings.create_button(self.master, "New Board",
-                                                    self.__settings,
+                                                    self.__new_settings,
                                                     self.font_size)
 
     # Places buttons
@@ -265,7 +265,7 @@ class WordSearchGUI:
     self.selected_word = self.word_search.Word()
 
   # Destroys current word search window and creates a new setting window
-  def __settings(self):
+  def __new_settings(self):
     self.master.destroy()
     root = tk.Tk()
     root.title("Settings")
