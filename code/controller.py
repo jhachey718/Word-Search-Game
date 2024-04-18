@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import BooleanVar, messagebox
+from tkinter import messagebox
 import word_search
 import window
 

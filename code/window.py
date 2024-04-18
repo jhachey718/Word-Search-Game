@@ -1,6 +1,5 @@
 import tkinter as tk
 import controller
-import word_search
 
 
 class WordSearchGUI:
@@ -24,14 +23,13 @@ class WordSearchGUI:
     self.selected_rectangle_list = []
     self.drag_mode = settings.drag_mode.get()
     self.offset = 1070 // self.word_search.board_size - 2
-    if self.word_search.board_size < 16:
+    if self.word_search.board_size < 21:
       self.offset -= 2
     if self.word_search.board_size < 13:
      self.offset -= 1
 
     self.width = self.master.winfo_width()
     self.height = self.master.winfo_height() - 75
-    print(self.width, self.height)
     self.word_bank = []
     self.font_size = 375 // self.word_search.board_size
 
@@ -122,7 +120,7 @@ class WordSearchGUI:
     column = 0
     multi_columns = False
     words_per_column = 0
-    font_difference = 12
+    font_difference = 13
 
     # Determines if multiple columns is necessary based on word list length
     if len(self.word_search.word_list) > 25:
@@ -152,10 +150,10 @@ class WordSearchGUI:
           column = 33 / 45
           i = 1
 
-        # Creates text box for each wor
+        # Creates text box for each word
         self.word_bank.append(
             self.canvas.create_text(x0 + (x1 - x0) * column,
-                                    y1 + line_spacing * i,
+                                    y1 + 10 + line_spacing * i,
                                     text=word,
                                     fill="#FDFFFC",
                                     justify="center",
@@ -167,7 +165,7 @@ class WordSearchGUI:
         # Creates text box for each word
         self.word_bank.append(
             self.canvas.create_text(x0 + (x1 - x0) / 2,
-                                    y1 + line_spacing * i,
+                                    y1 + 10 + line_spacing * i,
                                     text=word,
                                     fill="#FDFFFC",
                                     justify="center",

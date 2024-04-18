@@ -1,7 +1,6 @@
 from copy import deepcopy
 import random
 import string
-import window
 from pathlib import Path
 
 
